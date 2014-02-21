@@ -1,6 +1,6 @@
 <script type="text/javascript" src="js/jQuery.js"></script>
 <?php
-var_dump($_SESSION);
+//var_dump($_SESSION);
   if (isset($_SESSION['domain_id'])) {
     $domheaderquery = "SELECT enabled FROM domains WHERE domains.domain_id='" . $_SESSION['domain_id'] . "'";
     $domheaderresult = $dbh->query($domheaderquery);
@@ -92,14 +92,14 @@ var_dump($_SESSION);
   print "</p>";
   
   if ($_SESSION['admin'] >= 2) {
-	$SQL = "SELECT * FROM domains WHERE type = 'local' ORDER BY domain";
+	$SQL = "SELECT * FROM domains WHERE type = 'local' AND domain != 'dummydomain' ORDER BY domain";
 	$sth = $dbh->prepare($SQL);
 	$sth->execute();
     print "<div style=\"\">";
 	print "<select id=\"select_domains\">";
 	print "<option value='0'>Domain wechseln</option>";
-	while ($row = $sth->fetch()) {
-		print "<option value=\"".$row['domain_id']."\">".$row['domain']."</option>";
+	while ($header_domains = $sth->fetch()) {
+		print "<option value=\"".$header_domains['domain_id']."\">".$header_domains['domain']."</option>";
 	}
 	print "</select>";
 	print "</div>";

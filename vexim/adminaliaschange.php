@@ -72,6 +72,9 @@ with no spaces');
 value="<?php print $row['smtp']; ?>" class="textfield">
 </td>
 </tr>
+<?php
+if ($_SESSION['admin'] == '2') {
+?>
 <tr>
 <td><?php echo _('Password'); ?>:</td>
 <td>
@@ -117,6 +120,9 @@ able to log in, or if the Alias is the admin account'); ?>)
               } ?> class="textfield">
 </td>
 </tr>
+<?php
+}
+?>
 <tr>
 <td><?php echo _('Enabled'); ?>:</td>
 <td>

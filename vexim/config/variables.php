@@ -4,7 +4,7 @@
 
   $sqlserver = "localhost";
   $sqltype = "mysql";
-  $sqldb = "vexim";
+  $sqldb = "vexim2";
   $sqluser = "vexim";
   $sqlpass = "yu0ZbzTkg7";
 

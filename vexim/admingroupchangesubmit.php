@@ -4,7 +4,10 @@
   include_once dirname(__FILE__) . '/config/functions.php';
 
   # Fix the boolean values
-  $_POST['is_public'] = isset($_POST['is_public']) ? 'Y' : 'N';
+//  $_POST['is_public'] = isset($_POST['is_public']) ? 'Y' : 'N';
+  if (!isset($_POST['is_public'])) {
+	$_POST['is_public'] = 'Y';
+  }
   $_POST['enabled'] = isset($_POST['enabled']) ? 1 : 0;
 
   # validate localpart

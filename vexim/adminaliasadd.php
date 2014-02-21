@@ -45,6 +45,9 @@
             <td><?php echo _('Forward To'); ?>:</td>
             <td><input name="smtp" type="text" size="30" class="textfield"></td>
           </tr>
+		<?php
+		if ($_SESSION['admin'] == '2') {
+		?>
           <tr>
             <td><?php echo _('Password'); ?>:</td>
             <td>
@@ -80,6 +83,7 @@
               . '<input name="on_spamassassin" type="checkbox" class="textfield">'
               . '</td></tr>';
             }
+		  }
           ?>
           <tr>
             <td><?php echo _('Enabled'); ?>:</td>

@@ -47,6 +47,9 @@
               value="<?php echo $_GET['group_id']; ?>" class="textfield">
           </td>
         </tr>
+		<?php
+		if ($_SESSION['admin'] == 2) {
+		?>
         <tr>
           <td><?php echo _('Is public'); ?></td>
           <td>
@@ -55,6 +58,9 @@
               class="textfield">
           </td>
         </tr>
+		<?php
+		}
+		?>
         <tr>
           <td><?php echo _('Enabled'); ?></td>
           <td>
