@@ -1,6 +1,6 @@
 <?php
 
-$language = 'en_US';
+$language = 'de_DE';
 putenv ("LANG=$language");
 setlocale(LC_ALL, "");
 bindtextdomain('messages', './locale');

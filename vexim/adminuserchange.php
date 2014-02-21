@@ -265,8 +265,9 @@
           <td>
             <input type="text" size="25" name="forward"
             value="<?php print $row['forward']; ?>" class="textfield"><br>
-            <? echo _('Must be a full e-mail address'); ?>!<br>
-            <? echo _('OR') .":<br>\n"; ?>
+            <?php echo _('Must be a full e-mail address'); ?>!<br>
+            <?php echo _('OR'); ?>
+			<?php echo ":<br>\n"; ?>
             <select name="forwardmenu">
               <option selected value=""></option>
               <?php

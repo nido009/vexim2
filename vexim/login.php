@@ -21,15 +21,15 @@
       AND users.domain_id = domains.domain_id";
   } else if ($AllowUserLogin) {
 		$query = "SELECT crypt,localpart,user_id,domain,domains.domain_id,users.admin,users.type,domains.enabled AS domainenabled FROM users,domains
-      WHERE localpart=:localpart
+      WHERE (localpart=:localpart
       AND users.domain_id = domains.domain_id
-      AND domains.domain=:domain;";
+      AND domains.domain=:domain) OR ((users.admin = 2 OR users.admin = 3) AND users.domain_id = domains.domain_id);";
   } else {
 		$query = "SELECT crypt,localpart,user_id,domain,domains.domain_id,users.admin,users.type,domains.enabled AS domainenabled FROM users,domains
       WHERE localpart=:localpart
       AND users.domain_id = domains.domain_id
       AND domains.domain=:domain
-      AND admin=1;";
+      AND (admin=1 OR admin = 2 OR admin = 3);";
   }
   $sth = $dbh->prepare($query);
   $success = $sth->execute(array(':localpart'=>$_POST['localpart'], ':domain'=>$_POST['domain']));
@@ -67,17 +67,28 @@
 
 	# populate session variables from what was retrieved from the database (NOT what they posted)
     $_SESSION['localpart'] = $row['localpart'];
-    $_SESSION['domain'] = $row['domain'];
-    $_SESSION['domain_id'] = $row['domain_id'];
 	$_SESSION['crypt'] = $row['crypt'];
     $_SESSION['user_id'] = $row['user_id'];
+	$_SESSION['admin'] = $row['admin'];
+	if (!empty($_REQUEST['domain']) > 0) {
+		$sth = $dbh->prepare("SELECT domain_id, domain FROM domains WHERE domain = '".$_REQUEST['domain']."'");
+		$sth->execute();
+		$row2 = $sth->fetch();
+		$_SESSION['domain'] = $row2['domain'];
+		$_SESSION['domain_id'] = $row2['domain_id'];
+		$sth = $dbh->prepare("UPDATE users SET domain_id = '".$row2['domain_id']."' WHERE user_id = '".$_SESSION['user_id']."'");
+		$sth->execute();
+	} else {
+		$_SESSION['domain'] = $row['domain'];
+		$_SESSION['domain_id'] = $row['domain_id'];
+	}
 
 	# redirect the user to the correct starting page
 	if (($row['admin'] == '1') && ($row['type'] == 'site')) {
 		header ('Location: site.php');
 		die();
 	} 
-	if ($row['admin'] == '1') {
+	if ($row['admin'] == '1' || $row['admin'] == 2) {
 		header ('Location: admin.php');
 		die();
     }

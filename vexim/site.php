@@ -26,6 +26,7 @@
     <a href='sitepassword.php'><?php echo _('Site Password'); ?></a><br>
     <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
   </div>
+  <?php //var_dump($_SESSION); ?> 
   <div id="Content">
     <?php
       alpha_menu($alphadomains);

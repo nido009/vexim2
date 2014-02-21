@@ -59,7 +59,7 @@
           print '<td class="check">';
           print '</tr>';
         }
-        $query = "SELECT user_id,localpart,smtp,realname,type,admin
+        $query = "SELECT user_id,username AS localpart,smtp,realname,type,admin
           FROM users
           WHERE domain_id=:domain_id AND type='alias'
 		  ORDER BY localpart;";
@@ -110,3 +110,4 @@
 </html>
 
 <!-- Layout and CSS tricks obtained from http://www.bluerobot.com/web/layouts/ -->
+

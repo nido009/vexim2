@@ -3,14 +3,6 @@
   include_once dirname(__FILE__) . '/config/authpostmaster.php';
   include_once dirname(__FILE__) . '/config/functions.php';
   include_once dirname(__FILE__) . '/config/httpheaders.php';
-  include_once dirname(__FILE__) . 'Logging.php';
-
-  // Logging class initialization
-  $log = new Logging();
- 
-  // set path and name of log file (optional)
-  $log->lfile('/tmp/mylog.txt');
- 
 
   # Fix the boolean values
   if (isset($_POST['admin'])) {
@@ -89,15 +81,12 @@
       ));
 
     if ($success) {
-      $log->lwrite($_SESSION['localpart'] . " ". $_SESSION['domain']." ".$_SESSION['user_id']." ".$_SERVER['REMOTE_ADDR']." added user "$_POST['localpart'] . '@' . $_SESSION['domain']. " " .$_POST['realname']);
       header ("Location: adminalias.php?added={$_POST['localpart']}");
     } else {
       header ("Location: adminalias.php?failadded={$_POST['localpart']}");
     }
   } else {
     header ("Location: adminalias.php?badaliaspass={$_POST['localpart']}");
-  }
-  // close log file
-  $log->lclose();
+  } 
 ?>
 <!-- Layout and CSS tricks obtained from http://www.bluerobot.com/web/layouts/ -->

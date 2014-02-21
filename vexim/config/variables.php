@@ -6,7 +6,7 @@
   $sqltype = "mysql";
   $sqldb = "vexim";
   $sqluser = "vexim";
-  $sqlpass = "CHANGE";
+  $sqlpass = "yu0ZbzTkg7";
 
   $dsn = "$sqltype:host=$sqlserver;dbname=$sqldb";
   $dboptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8');
@@ -19,7 +19,7 @@
   }
 
   /* We use this IMAP server to check user quotas */
-  $imapquotaserver = "{mail.CHANGE.com:143/imap/notls}";
+  $imapquotaserver = "{.mail.bela.de:143/imap/notls}";
   $imap_to_check_quota = "no";
 
   /* Setting this to 0 if only admins should be allowed to login */
@@ -45,13 +45,13 @@
   /* The UID's and GID's control the default UID and GID for new domains
      and if postmasters can define their own.
      THE UID AND GID MUST BE NUMERIC! */
-  $uid = "90";
-  $gid = "90";
+  $uid = "496";
+  $gid = "496";
   $postmasteruidgid = "yes";
 
   /* The location of your mailstore for new domains.
      Make sure the directory belongs to the configured $uid/$gid! */
-  $mailroot = "/usr/local/mail/";
+  $mailroot = "/var/spool/vexim";
 
   /* path to Mailman */
   $mailmanroot = "http://www.EXAMPLE.com/mailman";

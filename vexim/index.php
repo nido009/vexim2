@@ -19,7 +19,7 @@
               <?php
                 $domain = preg_replace ("/^mail\./", "", $_SERVER["SERVER_NAME"]);
                 if ($domaininput == 'dropdown') {
-                  $query = "SELECT domain FROM domains WHERE type='local' AND domain!='admin' ORDER BY domain";
+                  $query = "SELECT domain FROM domains WHERE type='local' AND domain!='admin' AND domain !='dummydomain' ORDER BY domain";
                   $result = $dbh->query($query);
               ?>
                   <select name="domain" class="textfield">

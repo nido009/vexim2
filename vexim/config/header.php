@@ -1,4 +1,6 @@
+<script type="text/javascript" src="js/jQuery.js"></script>
 <?php
+var_dump($_SESSION);
   if (isset($_SESSION['domain_id'])) {
     $domheaderquery = "SELECT enabled FROM domains WHERE domains.domain_id='" . $_SESSION['domain_id'] . "'";
     $domheaderresult = $dbh->query($domheaderquery);
@@ -8,7 +10,7 @@
     $usrheaderrow = $usrheaderresult->fetch();
   }
 
-  print "<div id=\"Header\"><p><a href=\"https://github.com/avleen/vexim2\" target=\"_blank\">" . _("Virtual Exim") . "</a> ";
+  print "<div id=\"Header\"><p style=\"float: left; margin-right: 30px;\"><a href=\"https://github.com/avleen/vexim2\" target=\"_blank\">" . _("Virtual Exim") . "</a> ";
   if (isset($_SESSION['domain'])) {
     print     "-- " . $_SESSION['domain'] . " ";
   }
@@ -87,5 +89,30 @@
   }
   if (isset($_GET['login']) && ($_GET['login'] == "failed")) { print _("Login failed"); }
 
-  print "</p></div>";
+  print "</p>";
+  
+  if ($_SESSION['admin'] >= 2) {
+	$SQL = "SELECT * FROM domains WHERE type = 'local' ORDER BY domain";
+	$sth = $dbh->prepare($SQL);
+	$sth->execute();
+    print "<div style=\"\">";
+	print "<select id=\"select_domains\">";
+	print "<option value='0'>Domain wechseln</option>";
+	while ($row = $sth->fetch()) {
+		print "<option value=\"".$row['domain_id']."\">".$row['domain']."</option>";
+	}
+	print "</select>";
+	print "</div>";
+  }
+  
+  print "</div>";
 ?>
+<script>
+$('#select_domains').change(function(){
+    $("#select_domains option:selected").each(function() {
+		if ($(this).val() != 0) {
+			location.href = 'adminchangedomain.php?domainid=' + $(this).val() + '&domain=' + $(this).html();
+		}
+    });
+});
+</script>
