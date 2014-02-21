@@ -139,7 +139,7 @@
         ':on_spamassassin'=>$_POST['on_spamassassin'],
         ':sa_tag'=>((isset($_POST['sa_tag'] )) ? $_POST['sa_tag']  : 0),
         ':sa_refuse'=>((isset($_POST['sa_refuse'] )) ? $_POST['sa_refuse']  : 0),
-        ':maxmsgsize'=>$_POST['maxmsgsize'],
+        ':maxmsgsize'=>((isset($_POST['maxmsgsize'] )) ? $_POST['maxmsgsize'] : 0),
         ':enabled'=>$_POST['enabled'],
         ':quota'=>$_POST['quota'],
         ));

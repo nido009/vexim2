@@ -38,6 +38,9 @@
             </a>
           </td>
         </tr>
+<?php
+if ($_SESSION['admin'] == 2) {
+?>
         <tr>
           <td>
             <a href="adminfail.php">
@@ -50,6 +53,9 @@
               print '<tr><td><a href="adminlists.php">' . _('Manage mailing lists') . '</a></td></tr>';
             }
           ?>
+<?php
+}
+?>
         <tr>
           <td style="padding-top:1em">
             <a href="logout.php"><?php echo _('Logout'); ?></a>

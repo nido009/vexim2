@@ -62,7 +62,7 @@ if ($_GET['confirm'] == '1') {
   $query = "SELECT localpart FROM users WHERE user_id=:user_id";
   $sth = $dbh->prepare($query);
   $sth->execute(array(':user_id'=>$_GET['user_id']));
-  if ($sth->rowCount()) { $row = $sth->fetch(); }
+  if ($sth->rowCount()) { $row2 = $sth->fetch(); }
 }
 ?>
 <html>
@@ -83,7 +83,7 @@ if ($_GET['confirm'] == '1') {
           <tr>
             <td colspan="2">
               <?php printf (_('Please confirm deleting user %s@%s'),
-                $row['localpart'],
+                $row2['localpart'],
                 $_SESSION['domain']);
               ?>:
             </td>
@@ -92,7 +92,7 @@ if ($_GET['confirm'] == '1') {
             <td>
               <input name="confirm" type="radio" value="cancel" checked>
               <b><?php printf (_('Do Not Delete %s@%s'),
-                $row['localpart'],
+                $row2['localpart'],
                 $_SESSION['domain']);
               ?></b>
             </td>
@@ -101,7 +101,7 @@ if ($_GET['confirm'] == '1') {
             <td>
               <input name="confirm" type="radio" value="1">
               <b><?php printf (_('Delete %s@%s'),
-                $row['localpart'],
+                $row2['localpart'],
                 $_SESSION['domain']);
               ?></b>
             </td>

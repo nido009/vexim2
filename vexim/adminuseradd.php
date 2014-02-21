@@ -76,6 +76,7 @@
           </td>
         </tr>
       <?php
+	  if ($_SESSION['admin'] == 2) {
         if ($postmasteruidgid == "yes") { ?>
         <tr>
           <td><?php echo _('UID'); ?></td>
@@ -155,6 +156,9 @@
                 value="<?php echo $row['maxmsgsize']; ?>">Kb
             </td>
           </tr>
+		 <?php
+		 }
+		 ?>
         <tr>
           <td><?php echo _('Enabled'); ?>:</td>
           <td colspan="2"><input name="enabled" type="checkbox" checked></td>

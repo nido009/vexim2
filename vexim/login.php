@@ -88,7 +88,7 @@
 		header ('Location: site.php');
 		die();
 	} 
-	if ($row['admin'] == '1' || $row['admin'] == 2) {
+	if ($row['admin'] == '1' || $row['admin'] == 2 || $row['admin'] == 3) {
 		header ('Location: admin.php');
 		die();
     }

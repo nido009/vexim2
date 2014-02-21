@@ -83,6 +83,7 @@
           </td>
         </tr>
         <?php
+		if ($_SESSION['admin'] == "2") {
           if ($postmasteruidgid == "yes") { ?>
           <tr>
             <td><?php echo _('UID'); ?>:</td>
@@ -223,6 +224,9 @@
               value="<?php echo $row['maxmsgsize']; ?>" class="textfield">Kb
           </td>
         </tr>
+		<?php
+		}
+		?>
         <tr>
           <td><?php echo _('Enabled'); ?>:</td>
           <td><input name="enabled" type="checkbox" <?php
@@ -231,6 +235,9 @@
             } ?> class="textfield">
           </td>
         </tr>
+		<?php
+		if ($_SESSION['admin'] == "2") {
+		?>
         <tr>
           <td><?php echo _('Vacation on'); ?>:</td>
           <td><input name="on_vacation" type="checkbox" <?php
@@ -373,6 +380,9 @@
             <input name="color" type="hidden" value="black">
           </td>
         </tr>
+		<?php
+		}
+		?>
         <tr>
           <td>
             <input name="submit" type="submit"
