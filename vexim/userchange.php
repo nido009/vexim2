@@ -42,11 +42,13 @@
 	</table>
 	<table align="center">
 	  <tr><td colspan="2"><?php
+	  if ($_SESSION['admin'] >= 1) {
 	    if ($row['quota'] != "0") {
 	      printf (_("Your mailbox quota is currently: %s Mb"), $row['quota']);
 	    } else {
 	      print _("Your mailbox quota is currently: Unlimited");
 	    }
+	  }
 	  ?></td></tr><?php 
 	  if ($domrow['avscan'] == "1") {
 	    print "<tr><td>" . _("Anti-Virus") . ":</td><td><input name=\"on_avscan\" type=\"checkbox\"";
@@ -66,8 +68,10 @@
 	print "<tr><td>" . _("SpamAssassin refuse score") . ":</td>";
 	print "<td><input type=\"text\" size=\"5\" name=\"sa_refuse\" value=\"{$row['sa_refuse']}\" class=\"textfield\"></td></tr>\n";
       }
+	if ($_SESSION['admin'] >= 1) {
       print "<tr><td>" . _("Maximum message size") . ":</td>";
       print "<td><input type=\"text\" size=\"5\" name=\"maxmsgsize\" value=\"{$row['maxmsgsize']}\" class=\"textfield\"> " . _("Kb") . "</td></tr>\n";
+	}
       print "<tr><td>" . _("Vacation enabled") . ":</td><td><input name=\"on_vacation\" type=\"checkbox\"";
       if ($row['on_vacation'] == "1") { print " checked "; } 
       print "></td></tr>\n";
@@ -85,6 +89,9 @@
     <tr><td></td><td class="button"><input name="submit" type="submit" value="<?php echo _("Submit Profile"); ?>"></td></tr>
   </table>
   </form>
+  <?php
+  if ($_SESSION['admin'] >= 1) {
+  ?>
   <form name="blocklist" method="post" action="userblocksubmit.php">
     <table align="center">
       <tr><td><?php echo _("Add a new header blocking filter"); ?>:</td></tr>
@@ -109,6 +116,9 @@
       }
 	?>
       </table>
+	<?php
+	}
+	?>
     </div>
   </body>
 </html>

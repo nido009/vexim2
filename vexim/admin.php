@@ -56,6 +56,11 @@ if ($_SESSION['admin'] == 2) {
 <?php
 }
 ?>
+		<tr>
+			<td>
+				<a href="adminaccounts.php">Verwaltung der Administrator Accounts</a>
+			</td>
+		</tr>
         <tr>
           <td style="padding-top:1em">
             <a href="logout.php"><?php echo _('Logout'); ?></a>
