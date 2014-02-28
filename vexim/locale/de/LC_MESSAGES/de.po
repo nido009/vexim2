@@ -680,7 +680,7 @@ msgstr "Nachricht weiterleiten an"
 
 #: adminuserchange.php:95 userchange.php:78
 msgid "Store Forwarded Mail Locally"
-msgstr "Weitergeleitete Nachricht lokal speichern"
+msgstr "Weitergeleitete Nachrichten lokal speichern"
 
 #: adminuserchange.php:100
 msgid "Aliases to this account"
@@ -986,3 +986,7 @@ msgstr "Einstellungen speichern"
 #: userchange.php:86
 msgid "Add a new header blocking filter"
 msgstr "Eine neue Header-Filterregel f&uuml;r diesen Benutzer anlegen"
+
+#: userchange.php:85
+msgid "Must be a full e-mail address"
+msgstr "Muss eine vollst&auml;ndige Email-Adresse sein"

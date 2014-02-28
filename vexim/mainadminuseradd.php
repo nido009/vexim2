@@ -11,18 +11,18 @@
     AND (users.type='local' OR users.type='piped')
     GROUP BY domains.max_accounts";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   if ($sth->rowCount()) {
     $row = $sth->fetch();
   }
   if (!$row['allowed']) {
-    header ('Location: adminuser.php?maxaccounts=true');
+    header ('Location: mainadminuser.php?maxaccounts=true');
     die();
   }
 
   $query = "SELECT * FROM domains WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   $row = $sth->fetch();
 ?>
 <html>
@@ -34,12 +34,12 @@
   <body onLoad="document.adminadd.realname.focus()">
     <?php include dirname(__FILE__) . '/config/header.php'; ?>
     <div id="menu">
-      <a href="adminuser.php"><?php echo _('Manage Accounts'); ?></a><br>
-      <a href="admin.php"><?php echo _('Main Menu'); ?></a><br>
+      <a href="mainadminuser.php"><?php echo _('Manage Accounts'); ?></a><br>
+      <a href="mainadmin.php"><?php echo _('Main Menu'); ?></a><br>
       <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
     </div>
     <div id="forms" style="width: 650px;">
-    <form name="adminadd" method="post" action="adminuseraddsubmit.php">
+    <form name="adminadd" method="post" action="mainadminuseraddsubmit.php">
       <table align="center">
         <tr>
           <td><?php echo _('Name'); ?>:</td>
@@ -51,7 +51,7 @@
           <td><?php echo _('Address'); ?>:</td>
           <td colspan="2">
             <input type="textfield" size="25" name="localpart"
-              class="textfield">@<?php print $_SESSION['domain']; ?>
+              class="textfield">@<?php print $_SESSION['local_domain']; ?>
           </td>
         </tr>
         <tr>
@@ -75,17 +75,12 @@
           </td>
         </tr>
       <?php
-	  if ($_SESSION['admin'] == 2) {
         if ($row['quotas'] > "0") { ?>
         <tr>
           <td><?php printf (_('Mailbox quota (%s Mb max)'), $row['quotas']); ?></td>
           <td colspan="2"><input type="text" size="5" name="quota" class="textfield" value="<?php echo $row['quotas']; ?>"><?php echo _('Mb'); ?></td>
         </tr>
       <?php } ?>
-        <tr>
-          <td><?php echo _('Has domain admin privileges?'); ?></td>
-          <td colspan="2"><input name="admin" type="checkbox"></td>
-        </tr>
         <?php if ($row['pipe'] == "1") { ?>
            <tr>
             <td><?php echo _('Pipe to command'); ?>:</td>
@@ -145,9 +140,6 @@
                 value="<?php echo $row['maxmsgsize']; ?>">Kb
             </td>
           </tr>
-		 <?php
-		 }
-		 ?>
         <tr>
           <td><?php echo _('Enabled'); ?>:</td>
           <td colspan="2"><input name="enabled" type="checkbox" checked></td>

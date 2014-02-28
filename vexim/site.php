@@ -19,10 +19,11 @@
     <link rel="stylesheet" href="style.css" type="text/css">
   </head>
   <?php include dirname(__FILE__) . '/config/header.php'; ?>
-  <div id="menu">
+  <div id="menu" style="width: 200px;">
     <a href="siteadd.php?type=alias"><?php echo _('Add alias domain'); ?></a><br>
     <a href="siteadd.php?type=local"><?php echo _('Add local domain'); ?></a><br>
     <a href="siteadd.php?type=relay"><?php echo _('Add relay domain'); ?></a><br>
+    <a href="siteadmin.php"><?php echo _('Hauptadministrator verwalten'); ?></a><br>
     <a href='sitepassword.php'><?php echo _('Site Password'); ?></a><br>
     <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
   </div>
@@ -52,7 +53,7 @@
           domains.domain_id, count(*) AS count    
           FROM   users, domains
           WHERE  users.domain_id = domains.domain_id
-          AND    domain !='admin' AND admin=1";
+          AND    domain !='admin' AND (admin=1 OR admin=2 OR admin=3)";
         $queryParams = array();
         if ($alphadomains AND $letter != '') {
           $query .= " AND lower(domain) LIKE lower(:letter)";

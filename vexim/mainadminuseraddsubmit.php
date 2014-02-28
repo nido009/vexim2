@@ -12,11 +12,11 @@
 	AND (users.type='local' OR users.type='piped')
     GROUP BY domains.max_accounts";
   $sth = $dbh->prepare($query);
-  $success = $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $success = $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   if ($success) {
     $domrow = $sth->fetch();
     if (!$domrow['allowed']) {
-        header ("Location: adminuser.php?maxaccounts=true");
+        header ("Location: mainadminuser.php?maxaccounts=true");
         die();
     }
   }
@@ -29,17 +29,13 @@
   $query = "SELECT avscan,spamassassin,pipe,uid,gid,quotas FROM domains 
     WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   if ($sth->rowCount()) {
     $row = $sth->fetch();
   }
   
   # Fix the boolean values
-  if (isset($_POST['admin'])) {
-    $_POST['admin'] = 1;
-  } else {
-    $_POST['admin'] = 0;
-  }
+  $_POST['admin'] = 0;
   if (isset($_POST['enabled'])) {
     $_POST['enabled'] = 1;
   } else {
@@ -50,7 +46,7 @@
   }
   if($row['quotas'] != "0") {
     if (($_POST['quota'] > $row['quotas']) || ($_POST['quota'] == "0")) { 
-      header ("Location: adminuser.php?quotahigh={$row['quotas']}");
+      header ("Location: mainadminuser.php?quotahigh={$row['quotas']}");
       die; 
     }
   }
@@ -73,30 +69,31 @@
   }
 
   check_user_exists(
-    $dbh,$_POST['localpart'],$_SESSION['domain_id'],'adminuser.php'
+    $dbh,$_POST['localpart'],$_SESSION['local_domain_id'],'mainadminuser.php'
   );
-  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."' AND type = 'local'";
+  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
   $sthcheck = $dbh->prepare($SQL);
   $sthcheck->execute();
+  var_dump($sthcheck->rowCount());
   if ($sthcheck->rowCount() != 0) {
-	header ("Location: adminuser.php?failadded={$_POST['localpart']}");
+    header("Location: mainadminuser.php?failadded={$_POST['localpart']}");
 	die();
   }
 
   if (preg_match("/^\s*$/",$_POST['realname'])) {
-    header('Location: adminuser.php?blankname=yes');
+    header('Location: mainadminuser.php?blankname=yes');
     die;
   }
 
   if (preg_match("/['@%!\/\| ']/",$_POST['localpart'])
     || preg_match("/^\s*$/",$_POST['localpart'])) {
-    header("Location: adminuser.php?badname={$_POST['localpart']}");
+    header("Location: mainadminuser.php?badname={$_POST['localpart']}");
     die;
   }
 
   $query = "SELECT maildir FROM domains WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   if ($sth->rowCount()) { $row = $sth->fetch(); }
   if (($_POST['on_piped'] == 1) && ($_POST['smtp'] != '')) {
     $smtphomepath = $_POST['smtp'];
@@ -118,8 +115,8 @@
     $sth = $dbh->prepare($query);
     $success = $sth->execute(array(':localpart'=>$_POST['localpart'],
         ':localpart'=>$_POST['localpart'],
-        ':username'=>$_POST['localpart'].'@'.$_SESSION['domain'],
-        ':domain_id'=>$_SESSION['domain_id'],
+        ':username'=>$_POST['localpart'].'@'.$_SESSION['local_domain'],
+        ':domain_id'=>$_SESSION['local_domain_id'],
         ':crypt'=>crypt_password($_POST['clear'],$salt),
         ':clear'=>$_POST['clear'],
         ':smtp'=>$smtphomepath,
@@ -139,18 +136,18 @@
         ':quota'=>$_POST['quota'],
         ));
     if ($success) {
-      header ("Location: adminuser.php?added={$_POST['localpart']}");
-      mail("{$_POST['localpart']}@{$_SESSION['domain']}",
+      header ("Location: mainadminuser.php?added={$_POST['localpart']}");
+      mail("{$_POST['localpart']}@{$_SESSION['local_domain']}",
         vexim_encode_header(sprintf(_("Welcome %s!"), $_POST['realname'])),
         "$welcome_message",
-        "From: {$_SESSION['localpart']}@{$_SESSION['domain']}\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n");
+        "From: {$_SESSION['localpart']}@{$_SESSION['local_domain']}\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n");
       die;
     } else {
-      header ("Location: adminuser.php?failadded={$_POST['localpart']}");
+      header ("Location: mainadminuser.php?failadded={$_POST['localpart']}");
       die;
     }
   } else {
-    header ("Location: adminuser.php?badpass={$_POST['localpart']}");
+    header ("Location: mainadminuser.php?badpass={$_POST['localpart']}");
     die;
   }
 ?>

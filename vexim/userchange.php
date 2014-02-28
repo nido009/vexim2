@@ -28,7 +28,7 @@
     <div id="menu">
       <a href="logout.php"><?php echo _("Logout"); ?></a><br>
     </div>
-    <div id="forms">
+    <div id="forms" style="width: 550px;">
       <form name="userchange" method="post" action="userchangesubmit.php">
 	<table align="center">
 	  <tr><td><?php echo _("Name"); ?>:</td><td><input name="realname" type="text" value="<?php print $row['realname']; ?>" class="textfield"></td></tr>

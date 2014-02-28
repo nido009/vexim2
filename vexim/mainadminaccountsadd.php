@@ -3,43 +3,27 @@
   include_once dirname(__FILE__) . '/config/authpostmaster.php';
   include_once dirname(__FILE__) . '/config/functions.php';
   include_once dirname(__FILE__) . '/config/httpheaders.php';
-  # enforce limit on the maximum number of user accounts in the domain
-  $query = "SELECT (count(users.user_id) < domains.max_accounts)
-    OR (domains.max_accounts = 0) AS allowed FROM
-    users,domains WHERE users.domain_id=domains.domain_id
-    AND domains.domain_id=:domain_id
-    AND (users.type='local' OR users.type='piped')
-    GROUP BY domains.max_accounts";
-  $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
-  if ($sth->rowCount()) {
-    $row = $sth->fetch();
-  }
-  if (!$row['allowed']) {
-    header ('Location: adminuser.php?maxaccounts=true');
-    die();
-  }
 
   $query = "SELECT * FROM domains WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   $row = $sth->fetch();
 ?>
 <html>
   <head>
-    <title><?php echo _('Virtual Exim') . ': ' . _('Manage Users'); ?></title>
+    <title><?php echo _('Virtual Exim') . ': ' . _('Administrator hinzuf&uuml;gen'); ?></title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script src="scripts.js" type="text/javascript"></script>
   </head>
   <body onLoad="document.adminadd.realname.focus()">
     <?php include dirname(__FILE__) . '/config/header.php'; ?>
-    <div id="menu">
-      <a href="adminuser.php"><?php echo _('Manage Accounts'); ?></a><br>
-      <a href="admin.php"><?php echo _('Main Menu'); ?></a><br>
+    <div id="menu" style="width: 170px;">
+      <a href="mainadminaccounts.php"><?php echo _('Administratoren verwalten'); ?></a><br>
+      <a href="mainadmin.php"><?php echo _('Main Menu'); ?></a><br>
       <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
     </div>
-    <div id="forms" style="width: 650px;">
-    <form name="adminadd" method="post" action="adminuseraddsubmit.php">
+    <div id="forms" style="width: 700px;">
+    <form name="adminadd" method="post" action="mainadminaccountsaddsubmit.php">
       <table align="center">
         <tr>
           <td><?php echo _('Name'); ?>:</td>
@@ -49,9 +33,10 @@
         </tr>
         <tr>
           <td><?php echo _('Address'); ?>:</td>
-          <td colspan="2">
-            <input type="textfield" size="25" name="localpart"
-              class="textfield">@<?php print $_SESSION['domain']; ?>
+          <td colspan="2" style="float: left; width: 500px;">
+            <input type="textfield" size="25" name="localpart" style="float: left;"
+              class="textfield">@<?php echo $_SESSION['local_domain']; ?>
+			  <input type="hidden" name="domain_id" value="<?php echo $_SESSION['local_domain_id']; ?>" />			  
           </td>
         </tr>
         <tr>
@@ -75,7 +60,6 @@
           </td>
         </tr>
       <?php
-	  if ($_SESSION['admin'] == 2) {
         if ($row['quotas'] > "0") { ?>
         <tr>
           <td><?php printf (_('Mailbox quota (%s Mb max)'), $row['quotas']); ?></td>
@@ -83,8 +67,13 @@
         </tr>
       <?php } ?>
         <tr>
-          <td><?php echo _('Has domain admin privileges?'); ?></td>
-          <td colspan="2"><input name="admin" type="checkbox"></td>
+          <td><?php echo _('Administrator Rolle:'); ?></td>
+          <td colspan="2">
+		  <select name="admin">
+			<option value="1">lokaler Useradministrator</option>
+			<option value="3">globaler Useradministrator</option>
+		  </select>
+		  </td>
         </tr>
         <?php if ($row['pipe'] == "1") { ?>
            <tr>
@@ -145,9 +134,6 @@
                 value="<?php echo $row['maxmsgsize']; ?>">Kb
             </td>
           </tr>
-		 <?php
-		 }
-		 ?>
         <tr>
           <td><?php echo _('Enabled'); ?>:</td>
           <td colspan="2"><input name="enabled" type="checkbox" checked></td>
@@ -161,4 +147,3 @@
     </form>
   </body>
 </html>
-<!-- Layout and CSS tricks obtained from http://www.bluerobot.com/web/layouts/ -->

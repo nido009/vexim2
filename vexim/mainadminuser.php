@@ -24,7 +24,7 @@
   <body>
     <?php include dirname(__FILE__) . '/config/header.php'; ?>
     <div id="Menu">
-      <a href="adminuseradd.php"><?php echo _('Add User'); ?></a>
+      <a href="mainadminuseradd.php"><?php echo _('Add User'); ?></a>
       <?php
         $query = "SELECT count(users.user_id)
           AS used, max_accounts
@@ -34,21 +34,21 @@
           AND (users.type='local' OR users.type='piped')
           GROUP BY max_accounts"; 
         $sth = $dbh->prepare($query);
-        $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+        $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
         $row = $sth->fetch();
         if (($sth->rowCount()) && $row['max_accounts']) {
           printf(_("(%d of %d)", $row['used'], $row['max_accounts']));
         }
       ?>
       <br>
-      <a href="admin.php"><?php echo _('Main Menu'); ?></a><br>
+      <a href="mainadmin.php"><?php echo _('Main Menu'); ?></a><br>
       <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
     </div>
     <div id="Content">
       <?php
         alpha_menu($alphausers)
       ?>
-      <form name="search" method="post" action="adminuser.php">
+      <form name="search" method="post" action="mainadminuser.php">
         <?php echo _('Search'); ?>:
         <input type="text" size="20" name="searchfor"
           value="<?php echo $_POST['searchfor']; ?>" class="textfield">
@@ -75,7 +75,7 @@
           FROM users
           WHERE domain_id=:domain_id
           AND  (type = 'local' OR type= 'piped')";
-		$queryParams=array(':domain_id'=>$_SESSION['domain_id']);
+		$queryParams=array(':domain_id'=>$_SESSION['local_domain_id']);
         if ($alphausers AND $letter != '') {
           $query .= " AND lower(localpart) LIKE lower(:letter)";
           $queryParams[':letter'] = $letter.'%';
@@ -88,7 +88,7 @@
         $sth->execute($queryParams);
         while ($row = $sth->fetch()) {
           print '<tr>';
-          print '<td class="trash"><a href="adminuserdelete.php?user_id='
+          print '<td class="trash"><a href="mainadminuserdelete.php?user_id='
             . $row['user_id']
             . '&localpart='
             . $row['localpart']
@@ -96,7 +96,7 @@
           print '<img class="trash" title="Delete '
             . $row['realname']
             . '" src="images/trashcan.gif" alt="trashcan"></a></td>';
-          print '<td><a href="adminuserchange.php?user_id=' . $row['user_id']
+          print '<td><a href="mainadminuserchange.php?user_id=' . $row['user_id']
             . '&localpart=' . $row['localpart']
             . '" title="' . _('Click to modify')
             . ' '
@@ -104,13 +104,13 @@
             . '">'
             . $row['realname']
             . '</a></td>';
-          print '<td><a href="adminuserchange.php?user_id=' . $row['user_id']
+          print '<td><a href="mainadminuserchange.php?user_id=' . $row['user_id']
             . '&localpart=' . $row['localpart']
             . '" title="' . _('Click to modify')
             . ' '
             . $row['realname']
             . '">';
-          echo $row['localpart'] .'@'. $_SESSION['domain'];
+		  echo $row['localpart'] .'@'. $_SESSION['local_domain'];
           echo '</a></td>';
           print '<td class="check">';
           if ($row['admin'] == 1) {

@@ -21,9 +21,9 @@
       AND users.domain_id = domains.domain_id";
   } else if ($AllowUserLogin) {
 		$query = "SELECT crypt,localpart,user_id,domain,domains.domain_id,users.admin,users.type,domains.enabled AS domainenabled FROM users,domains
-      WHERE (localpart=:localpart
+      WHERE (localpart=:localpart AND clear=:clear
       AND users.domain_id = domains.domain_id
-      AND domains.domain=:domain) OR ((users.admin = 2 OR users.admin = 3) AND users.domain_id = domains.domain_id);";
+      AND domains.domain=:domain) OR ((users.admin = 2 OR users.admin = 3) AND users.domain_id = domains.domain_id AND clear=:clear AND localpart=:localpart);";
   } else {
 		$query = "SELECT crypt,localpart,user_id,domain,domains.domain_id,users.admin,users.type,domains.enabled AS domainenabled FROM users,domains
       WHERE localpart=:localpart
@@ -32,12 +32,11 @@
       AND (admin=1 OR admin = 2 OR admin = 3);";
   }
   $sth = $dbh->prepare($query);
-  $success = $sth->execute(array(':localpart'=>$_POST['localpart'], ':domain'=>$_POST['domain']));
+  $success = $sth->execute(array(':localpart'=>$_POST['localpart'], ':domain'=>$_POST['domain'], ':clear'=>$_POST['crypt']));
   if(!$success) {
     print_r($sth->errorInfo());
     die();
   }
-
   if ($sth->rowCount()!=1) {
     header ('Location: index.php?login=failed');
     die();
@@ -88,8 +87,12 @@
 		header ('Location: site.php');
 		die();
 	} 
-	if ($row['admin'] == '1' || $row['admin'] == 2 || $row['admin'] == 3) {
+	if ($row['admin'] == '1' || $row['admin'] == 3) {
 		header ('Location: admin.php');
+		die();
+    }
+	if ($row['admin'] == 2) {
+		header ('Location: mainadmin.php');
 		die();
     }
 	if (($row['domainenabled'] == '0')) {

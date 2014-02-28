@@ -1,6 +1,12 @@
 <script type="text/javascript" src="js/jQuery.js"></script>
 <?php
-//var_dump($_SESSION);
+if ($_SESSION['admin'] == 2 && strrpos($_SERVER['PHP_SELF'], 'main') === false) {
+	header('Location: mainadmin.php');
+}
+if (($_SESSION['admin'] == 1 || $_SESSION['admin'] == 3) && strrpos($_SERVER['PHP_SELF'], 'main')) {
+	header('Location: admin.php');
+}
+
   if (isset($_SESSION['domain_id'])) {
     $domheaderquery = "SELECT enabled FROM domains WHERE domains.domain_id='" . $_SESSION['domain_id'] . "'";
     $domheaderresult = $dbh->query($domheaderquery);
@@ -10,9 +16,13 @@
     $usrheaderrow = $usrheaderresult->fetch();
   }
 
-  print "<div id=\"Header\"><p style=\"float: left; margin-right: 30px;\"><a href=\"https://github.com/avleen/vexim2\" target=\"_blank\">" . _("Virtual Exim") . "</a> ";
+  print "<div id=\"Header\"><p style=\"float: left; margin-right: 30px;\">" . _("Virtual Exim") . "";
   if (isset($_SESSION['domain'])) {
-    print     "-- " . $_SESSION['domain'] . " ";
+	if (isset($_SESSION['local_domain'])) {
+		print     "-- " . $_SESSION['local_domain'] . " ";
+	} else {
+		print     "-- " . $_SESSION['domain'] . " ";
+	}
   }
   if (isset($_SESSION['domain_id'])) {
     if (($domheaderrow['enabled'] == "0") || ($domheaderrow['enabled'] == "f")) {
@@ -91,11 +101,11 @@
 
   print "</p>";
   
-  if ($_SESSION['admin'] >= 2) {
+  if ($_SESSION['admin'] == 3 || $_SESSION['admin'] == 2) {
 	$SQL = "SELECT * FROM domains WHERE type = 'local' AND domain != 'dummydomain' ORDER BY domain";
 	$sth = $dbh->prepare($SQL);
 	$sth->execute();
-    print "<div style=\"\">";
+    print "<div style=\"float: left;\">";
 	print "<select id=\"select_domains\">";
 	print "<option value='0'>Domain wechseln</option>";
 	while ($header_domains = $sth->fetch()) {
@@ -104,14 +114,18 @@
 	print "</select>";
 	print "</div>";
   }
-  
+  if (isset($_SESSION['user_id'])) {
+	  print "<div style=\"float: right;margin-right: 50px;font: 11px/20px verdana, arial, helvetica, sans-serif;\">Angemeldet als: ";
+	  print $_SESSION['localpart'];
+	  print "</div>";
+  }
   print "</div>";
 ?>
 <script>
 $('#select_domains').change(function(){
     $("#select_domains option:selected").each(function() {
 		if ($(this).val() != 0) {
-			location.href = 'adminchangedomain.php?domainid=' + $(this).val() + '&domain=' + $(this).html();
+			location.href = '<?php ($_SESSION['admin'] == 2)?(print 'main'):(print ''); ?>adminchangedomain.php?domainid=' + $(this).val() + '&domain=' + $(this).html();
 		}
     });
 });

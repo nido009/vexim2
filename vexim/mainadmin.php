@@ -15,7 +15,7 @@
       <table align="center">
         <tr>
           <td>
-            <a href="adminuser.php">
+            <a href="mainadminuser.php">
               <?php
                 echo _('Add, delete and manage POP/IMAP accounts');
               ?>
@@ -24,7 +24,7 @@
         </tr>
         <tr>
           <td>
-            <a href="adminalias.php">
+            <a href="mainadminalias.php">
               <?php
                 echo _('Add, delete and manage aliases, forwards and a Catchall');
               ?>
@@ -33,7 +33,7 @@
         </tr>
         <tr>
           <td>
-            <a href="admingroup.php">
+            <a href="mainadmingroup.php">
               <?php echo _('Add, delete and manage groups'); ?>
             </a>
           </td>
@@ -43,19 +43,24 @@ if ($_SESSION['admin'] == 2) {
 ?>
         <tr>
           <td>
-            <a href="adminfail.php">
+            <a href="mainadminfail.php">
               <?php echo _('Add, delete and manage :fail:\'s'); ?>
             </a>
           </td>
         </tr>
           <?php
             if ($mailmanroot != "") {
-              print '<tr><td><a href="adminlists.php">' . _('Manage mailing lists') . '</a></td></tr>';
+              print '<tr><td><a href="mainadminlists.php">' . _('Manage mailing lists') . '</a></td></tr>';
             }
           ?>
 <?php
 }
 ?>
+		<tr>
+			<td>
+				<a href="mainadminaccounts.php">Verwaltung der Administrator Accounts</a>
+			</td>
+		</tr>
         <tr>
           <td style="padding-top:1em">
             <a href="logout.php"><?php echo _('Logout'); ?></a>

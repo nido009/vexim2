@@ -1,0 +1,58 @@
+<?php
+  include_once dirname(__FILE__) . '/config/variables.php';
+  include_once dirname(__FILE__) . '/config/authpostmaster.php';
+  include_once dirname(__FILE__) . "/config/functions.php";
+  include_once dirname(__FILE__) . '/config/httpheaders.php';
+?>
+<html>
+  <head>
+    <title><?php echo _('Virtual Exim') . ': ' . _('Manage Users'); ?></title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  <body>
+    <?php include dirname(__FILE__) . '/config/header.php'; ?>
+    <div id="menu">
+      <a href="mainadminfailadd.php"><?php echo _('Add Fail'); ?></a><br>
+      <a href="mainadmin.php"><?php echo _('Main Menu'); ?></a><br>
+      <br><a href="logout.php"><?php echo _('Logout'); ?></a><br>
+    </div>
+    <div id="Content">
+    <table align="center">
+      <tr>
+        <th>&nbsp;</th>
+        <th><?php echo _('Failed Address'); ?>..</th>
+      </tr>
+      <?php
+        $query = "SELECT user_id,localpart FROM users
+          WHERE domain_id=:domain_id
+          AND users.type='fail'
+          ORDER BY localpart;";
+        $sth = $dbh->prepare($query);
+        $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
+        if ($sth->rowCount()) {
+          while ($row = $sth->fetch()) {
+            print '<tr>'
+              . '<td align="center">'
+              . '<a href="mainadminfaildelete.php?user_id='
+              . $row['user_id']
+              . '"><img class="trash" src="images/trashcan.gif" title="'
+              . _('Delete fail ')
+              . $row['localpart']
+              . '"></a></td>';
+            print '<td>'
+              . '<a href="mainadminfailchange.php?user_id='
+              . $row['user_id']
+              . '">'
+              . $row['localpart']
+              . '@'
+              . $_SESSION['local_domain']
+              . '</a></td>';
+            print '</tr>';
+          }
+        }
+      ?>
+    </table>
+    </div>
+  </body>
+</html>
+<!-- Layout and CSS tricks obtained from http://www.bluerobot.com/web/layouts/ -->

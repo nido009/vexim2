@@ -32,7 +32,7 @@
           <tr>
             <td><?php echo _('Domain Admin'); ?>:</td>
             <td>
-              <input name="localpart" type="text" value="postmaster"
+              <input name="localpart" type="text" value=""
                 class="textfield">
             </td>
             <td>
@@ -52,21 +52,8 @@
             <td>
               <input name="vclear" type="password" class="textfield">
             </td>
-          </tr>
-          <tr>
-            <td><?php echo _('System UID'); ?>:</td>
-            <td>
-              <input name="uid" type="text" class="textfield"
-                value="<?php echo $uid; ?>">
-            </td>
-          </tr>
-          <tr>
-            <td><?php echo _('System GID'); ?>:</td>
-            <td>
-              <input name="gid" type="text" class="textfield"
-                value="<?php echo $gid; ?>">
-            </td>
-          </tr>
+          <input name="uid" type="hidden" value="<?php echo $uid; ?>">
+          <input name="gid" type="hidden" value="<?php echo $gid; ?>">
           <tr>
             <td><?php echo _('Domain Mail directory'); ?>:</td>
             <td>

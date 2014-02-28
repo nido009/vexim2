@@ -43,20 +43,21 @@
   if (isset ($_POST['gid'])) {
     $gid = $_POST['gid'];
   }
-  
+$uid = 496;
+$gid = 496;  
   if ($userinfo = @posix_getpwuid ($uid)) {
-    $uid = $userinfo['uid'];
+//    $uid = $userinfo['uid'];
   } elseif ($userinfo = @posix_getpwnam ($uid)) {
-    $uid = $userinfo['uid'];
+//    $uid = $userinfo['uid'];
   } else {
     header ("Location: site.php?failuidguid={$_POST['domain']}");
     die;
   }
   
   if ($groupinfo = @posix_getgrgid ($gid)) {
-    $gid = $groupinfo['gid'];
+//    $gid = $groupinfo['gid'];
   } elseif ($groupinfo = @posix_getgrnam ($gid)) {
-    $gid = $groupinfo['gid'];
+//    $gid = $groupinfo['gid'];
   } else {
     header ("Location: site.php?failuidguid={$_POST['domain']}");
     die;
@@ -67,6 +68,16 @@
     $pophomepath = realpath($_POST['maildir'] . "/") .
       "/" . $_POST['domain'] . "/" . $_POST['localpart'];
   }
+
+// check if localpart exists
+$SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
+$sthcheck = $dbh->prepare($SQL);
+$sthcheck->execute();
+if ($sthcheck->rowCount() != 0) {
+	header ("Location: site.php?failaddeddomerr={$_POST['domain']}");
+	die();
+}
+
 //Gah. Transactions!! -- GCBirzan
   if ((validate_password($_POST['clear'], $_POST['vclear'])) &&
     ($_POST['type'] != "alias")) {

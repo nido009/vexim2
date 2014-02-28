@@ -994,3 +994,7 @@ msgstr ""
 #: userchange.php:87
 msgid "Add a new header blocking filter"
 msgstr ""
+
+#: userchange.php:85
+msgid "Must be a full e-mail address"
+msgstr ""

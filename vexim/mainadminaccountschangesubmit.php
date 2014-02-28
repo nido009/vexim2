@@ -5,12 +5,11 @@
   include_once dirname(__FILE__) . '/config/httpheaders.php';
 
   # confirm that the postmaster is updating a user they are permitted to change before going further  
-  $query = "SELECT * FROM users WHERE user_id=:user_id
-		AND domain_id=:domain_id AND (type='local' OR type='piped')";
+  $query = "SELECT * FROM users WHERE user_id=:user_id AND (type='local' OR type='piped')";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':user_id'=>$_POST['user_id'], ':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':user_id'=>$_POST['user_id']));
   if (!$sth->rowCount()) {
-	  header ("Location: adminuser.php?failupdated={$_POST['localpart']}");
+	  header ("Location: mainadminaccounts.php?failupdated={$_POST['localpart']}");
 	  die();  
   }
  
@@ -19,14 +18,9 @@
     FROM domains
     WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   if ($sth->rowCount()) {
     $row = $sth->fetch();
-  }
-  if (isset($_POST['admin'])) {
-    $_POST['admin'] = 1;
-  } else {
-    $_POST['admin'] = 0;
   }
   if (isset($_POST['on_forward'])) {
     $_POST['on_forward'] = 1;
@@ -68,7 +62,7 @@
   }
   if ($row['quotas'] != "0") {
     if (($_POST['quota'] > $row['quotas']) || ($_POST['quota'] == "0")) {
-      header ("Location: adminuser.php?quotahigh={$row['quotas']}");
+      header ("Location: mainadminaccounts.php?quotahigh={$row['quotas']}");
       die;
     }
   }
@@ -98,21 +92,21 @@
 
   # Prevent de-admining the last admin
   $query = "SELECT COUNT(user_id) AS count FROM users
-    WHERE admin=1 AND domain_id=:domain_id
+    WHERE (admin=1 OR admin=3) AND domain_id=:domain_id
 	AND (type='local' OR type='piped')
     AND user_id!=:user_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id'], ':user_id'=>$_POST['user_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id'], ':user_id'=>$_POST['user_id']));
   $row = $sth->fetch();
   if (($row['count'] == "0") && ($_POST['admin'] == "0")) {
-    header ("Location: adminuser.php?lastadmin={$_POST['localpart']}");
+    header ("Location: mainadminaccounts.php?lastadmin={$_POST['localpart']}");
     die;
   }
 
   # Set the appropriate maildirs
   $query = "SELECT maildir FROM domains WHERE domain_id=:domain_id";
   $sth = $dbh->prepare($query);
-  $sth->execute(array(':domain_id'=>$_SESSION['domain_id']));
+  $sth->execute(array(':domain_id'=>$_SESSION['local_domain_id']));
   $row = $sth->fetch();
   if (($_POST['on_piped'] == 1) && ($_POST['smtp'] != "")) {
     $smtphomepath = $_POST['smtp'];
@@ -132,18 +126,18 @@
       WHERE localpart=:localpart
       AND domain_id=:domain_id";
     $sth = $dbh->prepare($query);
-	$success = $sth->execute(array(':crypt'=>$cryptedpassword, ':clear'=>$_POST['clear'],
-		':localpart'=>$_POST['localpart'], ':domain_id'=>$_SESSION['domain_id']));
+    $success = $sth->execute(array(':crypt'=>$cryptedpassword, ':clear'=>$_POST['clear'],
+        ':localpart'=>$_POST['localpart'], ':domain_id'=>$_SESSION['local_domain_id']));
     if ($success) {
       if ($_POST['localpart'] == $_SESSION['localpart']) { 
         $_SESSION['crypt'] = $cryptedpassword;
       }
     } else { 
-      header ("Location: adminuser.php?failupdated={$_POST['localpart']}");
+      header ("Location: mainadminaccounts.php?failupdated={$_POST['localpart']}");
       die;
     }
   } else if ($_POST['clear'] != $_POST['vclear']) {
-      header ("Location: adminuser.php?badpass={$_POST['localpart']}");
+      header ("Location: mainadminaccounts.php?badpass={$_POST['localpart']}");
       die;
   }
 
@@ -191,9 +185,9 @@
     ':unseen'=>$_POST['unseen'], ':user_id'=>$_POST['user_id'],
     ));
   if ($success) {
-    header ("Location: adminuser.php?updated={$_POST['localpart']}");
+    header ("Location: mainadminaccounts.php?updated={$_POST['localpart']}");
   } else {
-    header ("Location: adminuser.php?failupdated={$_POST['localpart']}");
+    header ("Location: mainadminaccounts.php?failupdated={$_POST['localpart']}");
   }
 ?>
 <!-- Layout and CSS tricks obtained from http://www.bluerobot.com/web/layouts/ -->
