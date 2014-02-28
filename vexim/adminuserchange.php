@@ -314,6 +314,7 @@ if (!$sth->rowCount()) {
 ?>
 			<tr>
 				<td colspan="2" class="button">
+					<input type="hidden" name="localpart" value="<?php echo $row['localpart']; ?>" />
 					<input name="submit" type="submit" value="Submit">
 				</td>
 			</tr>

@@ -1,6 +1,8 @@
 <?php
   /* SQL Database login information */
   include_once dirname(__FILE__) . "/i18n.php";
+  include_once dirname(__FILE__) . "/db.php";
+  include_once dirname(__FILE__) . "/Logging.php";
 
   $sqlserver = "localhost";
   $sqltype = "mysql";
@@ -9,7 +11,8 @@
   $sqlpass = "yu0ZbzTkg7";
 
   $dsn = "$sqltype:host=$sqlserver;dbname=$sqldb";
-  $dboptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8');
+  $log = new Logging();
+  $dboptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8', PDO::ATTR_STATEMENT_CLASS => array('Database', array()));
 
   try {
     $dbh = new PDO($dsn, $sqluser, $sqlpass, $dboptions);
