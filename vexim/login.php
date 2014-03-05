@@ -70,13 +70,13 @@
     $_SESSION['user_id'] = $row['user_id'];
 	$_SESSION['admin'] = $row['admin'];
 	if (!empty($_REQUEST['domain']) > 0) {
-		$sth = $dbh->prepare("SELECT domain_id, domain FROM domains WHERE domain = '".$_REQUEST['domain']."'");
-		$sth->execute();
+		$sth = $dbh->prepare("SELECT domain_id, domain FROM domains WHERE domain = :domain");
+		$sth->execute(array(':domain' => $_REQUEST['domain']));
 		$row2 = $sth->fetch();
 		$_SESSION['domain'] = $row2['domain'];
 		$_SESSION['domain_id'] = $row2['domain_id'];
-		$sth = $dbh->prepare("UPDATE users SET domain_id = '".$row2['domain_id']."' WHERE user_id = '".$_SESSION['user_id']."'");
-		$sth->execute();
+		$sth = $dbh->prepare("UPDATE users SET domain_id = :domain_id WHERE user_id = :user_id");
+		$sth->execute(array(':domain_id' => $row2['domain_id'], ':user_id' => $_SESSION['user_id']));
 	} else {
 		$_SESSION['domain'] = $row['domain'];
 		$_SESSION['domain_id'] = $row['domain_id'];

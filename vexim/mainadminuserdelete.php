@@ -37,9 +37,9 @@ if ($_GET['confirm'] == '1') {
   $sth = $dbh->prepare($query);
   $success = $sth->execute(array(':user_id'=>$_GET['user_id'], ':domain_id'=>$_SESSION['local_domain_id']));
   if ($success) {
-    $query = "DELETE FROM group_contents WHERE member_id=:user_id";
+    $query = "DELETE FROM group_contents WHERE member_id=:member_id";
     $sth = $dbh->prepare($query);
-    $sth->execute(array(':user_id'=>$_GET['user_id']));
+    $sth->execute(array(':member_id'=>$_GET['user_id']));
     header ("Location: mainadminuser.php?deleted={$_GET['localpart']}");
   } else {
     header ("Location: mainadminuser.php?faildeleted={$_GET['localpart']}");

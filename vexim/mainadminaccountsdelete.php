@@ -4,9 +4,9 @@ include_once dirname(__FILE__) . '/config/authpostmaster.php';
 include_once dirname(__FILE__) . '/config/functions.php';
 include_once dirname(__FILE__) . '/config/httpheaders.php';
 
-$SQL = "SELECT * FROM users WHERE user_id = '".$_REQUEST['user_id']."'";
+$SQL = "SELECT * FROM users WHERE user_id = :userid";
 $sth = $dbh->prepare($SQL);
-$sth->execute();
+$sth->execute(array(':user_id' => $_REQUEST['user_id']));
 if (!$sth->rowCount()) {
   header ("Location: mainadminaccounts.php?faildeleted={$_GET['localpart']}");
   die();  
@@ -14,16 +14,16 @@ if (!$sth->rowCount()) {
 if(!isset($_GET['confirm'])) { $_GET['confirm'] = null; }
 
 if ($_GET['confirm'] == '1') {
-	$SQL = "SELECT * FROM users WHERE user_id = '".$_REQUEST['user_id']."'";
+	$SQL = "SELECT * FROM users WHERE user_id = :user_id";
 	$sth = $dbh->prepare($SQL);
-	$sth->execute();
+	$sth->execute(array(':user_id' => $_REQUEST['user_id']));
 	if (!$sth->rowCount()) {
 		header ("Location: mainadminaccounts.php?faildeleted={$_GET['localpart']}");
 		die;                                                      
 	} else {
-		$SQL = "DELETE FROM users WHERE user_id = '".$_REQUEST['user_id']."'";
+		$SQL = "DELETE FROM users WHERE user_id = :user_id";
 		$sth = $dbh->prepare($SQL);
-		$success = $sth->execute();
+		$success = $sth->execute(array(':user_id' => $_REQUEST['user_id']));
 		if ($success) {
 			header ("Location: mainadminaccounts.php?deleted={$_GET['localpart']}");
 			die;                                                      

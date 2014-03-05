@@ -13,7 +13,7 @@
 	  header ("Location: mainadminuser.php?failupdated={$_POST['localpart']}");
 	  die();  
   }
- 
+
   # Fix the boolean values
   $query = "SELECT avscan,spamassassin,pipe,uid,gid,quotas
     FROM domains

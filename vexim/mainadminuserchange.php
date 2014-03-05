@@ -62,6 +62,8 @@
         </tr>
         <input name="user_id" type="hidden"
           value="<?php print $_GET['user_id']; ?>" class="textfield">
+		<input name="localpart" type="hidden"
+		  value="<?php print $_GET['localpart']; ?>">
         <tr>
           <td><?php echo _('Password'); ?>:</td>
           <td>

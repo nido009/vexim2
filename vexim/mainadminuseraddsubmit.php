@@ -71,9 +71,9 @@
   check_user_exists(
     $dbh,$_POST['localpart'],$_SESSION['local_domain_id'],'mainadminuser.php'
   );
-  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
+  $SQL = "SELECT * FROM users WHERE localpart = :localpart";
   $sthcheck = $dbh->prepare($SQL);
-  $sthcheck->execute();
+  $sthcheck->execute(array(':localpart' => $_POST['localpart']));
   var_dump($sthcheck->rowCount());
   if ($sthcheck->rowCount() != 0) {
     header("Location: mainadminuser.php?failadded={$_POST['localpart']}");

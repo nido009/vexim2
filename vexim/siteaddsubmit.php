@@ -70,9 +70,9 @@ $gid = 496;
   }
 
 // check if localpart exists
-$SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
+$SQL = "SELECT * FROM users WHERE localpart = :localpart";
 $sthcheck = $dbh->prepare($SQL);
-$sthcheck->execute();
+$sthcheck->execute(array(':localpart' => $_POST['localpart']));
 if ($sthcheck->rowCount() != 0) {
 	header ("Location: site.php?failaddeddomerr={$_POST['domain']}");
 	die();

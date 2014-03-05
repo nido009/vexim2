@@ -17,9 +17,9 @@
   check_user_exists(
     $dbh,$_POST['realname'],'hauptadmin','siteadmin.php'
   );
-  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."' AND type = 'local'";
+  $SQL = "SELECT * FROM users WHERE localpart = :localpart AND type = 'local'";
   $sthcheck = $dbh->prepare($SQL);
-  $sthcheck->execute();
+  $sthcheck->execute(array(':localpart' => $_POST['localpart']));
   if ($sthcheck->rowCount() != 0) {
 	header ("Location: siteadmin.php?failadded={$_POST['localpart']}");
 	die();

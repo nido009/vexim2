@@ -11,9 +11,9 @@
   }
   
   // check if username available
-  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
+  $SQL = "SELECT * FROM users WHERE localpart = :localpart";
   $sth = $dbh->prepare($SQL);
-  $sth->execute();
+  $sth->execute(array(':localpart' => $_POST['localpart']));
   if ($sth->rowCount() != 0) {
 	$row = $sth->fetch();
 	if ($row['user_id'] != $_POST['user_id']) {

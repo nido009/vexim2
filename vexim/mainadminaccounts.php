@@ -26,9 +26,9 @@
 				<th>Rolle</th>
 			</tr>
 <?php
-$SQL = "SELECT * FROM `users` WHERE (`admin` = 1 OR `admin` = 3) AND type = 'local' AND domain_id = '".$_SESSION['local_domain_id']."'";
+$SQL = "SELECT * FROM `users` WHERE (`admin` = 1 OR `admin` = 3) AND type = 'local' AND domain_id = :domain_id";
 $sth = $dbh->prepare($SQL);
-$sth->execute();
+$sth->execute(array(':domain_id' => $_SESSION['local_domain_id']);
 while ($row = $sth->fetch()) {
 	echo "<tr>";
 	echo "<td><a href=\"mainadminaccountsdelete.php?user_id=".$row['user_id']."&localpart=".$row['localpart']."\"><img class=\"trash\" title=\"".$row['localpart']."\" src=\"images/trashcan.gif\" alt=\"trashcan\"></a></td>";

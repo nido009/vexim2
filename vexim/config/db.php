@@ -10,13 +10,36 @@ class Database extends PDOStatement {
 		global $log;
 		$this->_debugValues = $values;
 		try {
-			$t = parent::execute($values);
 			$raw = $this->replaceQuery();
+			$raw = strtolower(preg_replace( "/\r|\n/", "", preg_replace('/\s+/', ' ',$raw)));
 			$method = substr($raw, 0, 6);
 			if (strtolower($method) == 'insert' || strtolower($method) == 'update' || strtolower($method) == 'delete') {
-				$log->lwrite(preg_replace( "/\r|\n/", "", preg_replace('/\s+/', ' ',$raw)));
+				$q = null;
+				if (isset($this->_debugValues[':user_id'])) {
+					global $dbh;
+					$t = $dbh->prepare("SELECT * FROM users WHERE user_id = '".$this->_debugValues[':user_id']."'");
+					$t->execute();
+					$row = $t->fetch();
+					$q = "Query with user ID '".$this->_debugValues[':user_id']."' => '".$row['username']."'";
+				}
+				if (isset($this->_debugValues[':domain_id'])) {
+					global $dbh;
+					$t = $dbh->prepare("SELECT * FROM domains WHERE domain_id = '".$this->_debugValues[':domain_id']."'");
+					$t->execute();
+					$row = $t->fetch();
+					if ($q == null) {
+						$q = "Query with domain ID '".$this->_debugValues[':domain_id']."' => '".$row['domain']."'";
+					} else {
+						$q .= " and domain ID '".$this->_debugValues[':domain_id']."' => '".$row['domain']."'";
+					}
+				}
+				if (!empty($q)) {
+					$log->lwrite($q);
+				}
+				$log->lwrite($raw);
 				$log->lclose();
 			}
+			$t = parent::execute($values);
 		} catch (PDOException $e) {
 			// maybe do some logging here?
 			throw $e;
@@ -55,28 +78,5 @@ class Database extends PDOStatement {
 		return "'". $v ."'";
 	}
 }
-/*
-// have a look at http://www.php.net/manual/en/pdo.constants.php
-$options = array(
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-  PDO::ATTR_STATEMENT_CLASS => array('MyPDOStatement', array()),
-);
-
-// create PDO with custom PDOStatement class
-$pdo = new PDO($dsn, $username, $password, $options);
-
-// prepare a query
-$query = $pdo->prepare("INSERT INTO mytable (column1, column2, column3)
-  VALUES (:col1, :col2, :col3)");
-
-// execute the prepared statement
-$query->execute(array(
-  'col1' => "hello world",
-  'col2' => 47.11,
-  'col3' => null,
-));
-
-// output the query and the query with values inserted
-var_dump( $query->queryString, $query->_debugQuery() );*/
 
 ?>

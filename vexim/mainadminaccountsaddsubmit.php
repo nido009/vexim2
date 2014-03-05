@@ -80,9 +80,9 @@
   }
 
   // check if user exists
-  $SQL = "SELECT * FROM users WHERE localpart = '".$_POST['localpart']."'";
+  $SQL = "SELECT * FROM users WHERE localpart = :localpart";
   $sth = $dbh->prepare($SQL);
-  $sth->execute();
+  $sth->execute(array(':localpart' => $_POST['localpart']));
   if ($sth->rowCount() != 0) {
 	header ("Location: mainadminaccounts.php?failadded={$_POST['localpart']}");
 	die();
