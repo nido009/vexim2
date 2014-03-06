@@ -8,6 +8,8 @@ class Database extends PDOStatement {
 
 	public function execute($values=array()) {
 		global $log;
+		global $dbh;
+
 		$this->_debugValues = $values;
 		try {
 			$raw = $this->replaceQuery();
@@ -16,14 +18,12 @@ class Database extends PDOStatement {
 			if (strtolower($method) == 'insert' || strtolower($method) == 'update' || strtolower($method) == 'delete') {
 				$q = null;
 				if (isset($this->_debugValues[':user_id'])) {
-					global $dbh;
 					$t = $dbh->prepare("SELECT * FROM users WHERE user_id = '".$this->_debugValues[':user_id']."'");
 					$t->execute();
 					$row = $t->fetch();
 					$q = "Query with user ID '".$this->_debugValues[':user_id']."' => '".$row['username']."'";
 				}
 				if (isset($this->_debugValues[':domain_id'])) {
-					global $dbh;
 					$t = $dbh->prepare("SELECT * FROM domains WHERE domain_id = '".$this->_debugValues[':domain_id']."'");
 					$t->execute();
 					$row = $t->fetch();
@@ -31,6 +31,16 @@ class Database extends PDOStatement {
 						$q = "Query with domain ID '".$this->_debugValues[':domain_id']."' => '".$row['domain']."'";
 					} else {
 						$q .= " and domain ID '".$this->_debugValues[':domain_id']."' => '".$row['domain']."'";
+					}
+				}
+				if (isset($this->_debugValues[':group_id'])) {
+					$t = $dbh->prepare("SELECT * FROM groups WHERE id = '".$this->_debugValues[':group_id']."'");
+					$t->execute();
+					$row = $t->fetch();
+					if ($q == null) {
+						$q = "Query with group ID '".$this->_debugValues[':group_id']."' => '".$row['group']."'";
+					} else {
+						$q .= " and group ID '".$this->_debugValues[':group_id']."' => '".$row['group']."'";
 					}
 				}
 				if (!empty($q)) {

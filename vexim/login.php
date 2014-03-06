@@ -80,6 +80,8 @@
 	} else {
 		$_SESSION['domain'] = $row['domain'];
 		$_SESSION['domain_id'] = $row['domain_id'];
+		$sth = $dbh->prepare("UPDATE users SET domain_id = :domain_id WHERE user_id = :user_id");
+		$sth->execute(array(':domain_id' => $row['domain_id'], ':user_id' => $_SESSION['user_id']));
 	}
 
 	# redirect the user to the correct starting page
