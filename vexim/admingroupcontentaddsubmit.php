@@ -17,9 +17,9 @@
     header("Location: admingroup.php?badname={$_POST['usertoadd']}");
     die;
   }
-  $query = "INSERT INTO group_contents (group_id, member_id) VALUES (:group_id, :usertoadd)";
+  $query = "INSERT INTO group_contents (group_id, member_id) VALUES (:group_id, :user_id)";
   $sth = $dbh->prepare($query);
-  $success = $sth->execute(array(':group_id'=>$_POST['group_id'], ':usertoadd'=>$_POST['usertoadd']));
+  $success = $sth->execute(array(':group_id'=>$_POST['group_id'], ':user_id'=>$_POST['usertoadd']));
   if ($success) { 
     header ("Location: admingroupchange.php?group_id={$_POST['group_id']}&group_updated={$_POST['localpart']}"); 
   } else { 

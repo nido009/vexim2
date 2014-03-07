@@ -19,9 +19,9 @@
   }
   $query = "DELETE FROM group_contents 
     WHERE group_id=:group_id
-    AND member_id=:member_id";
+    AND member_id=:user_id";
   $sth = $dbh->prepare($query);
-  $success = $sth->execute(array(':group_id'=>$_REQUEST['group_id'], ':member_id'=>$_REQUEST['member_id']));
+  $success = $sth->execute(array(':group_id'=>$_REQUEST['group_id'], ':user_id'=>$_REQUEST['member_id']));
   if ($success) { 
     header ("Location: admingroupchange.php?group_id={$_REQUEST['group_id']}&group_updated={$_REQUEST['localpart']}"); 
   } else { 

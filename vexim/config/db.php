@@ -21,7 +21,7 @@ class Database extends PDOStatement {
 					$t = $dbh->prepare("SELECT * FROM users WHERE user_id = '".$this->_debugValues[':user_id']."'");
 					$t->execute();
 					$row = $t->fetch();
-					$q = "Query with user ID '".$this->_debugValues[':user_id']."' => '".$row['username']."'";
+					$q = "Query with user ID '".$this->_debugValues[':user_id']."' => '".$row['localpart']."'";
 				}
 				if (isset($this->_debugValues[':domain_id'])) {
 					$t = $dbh->prepare("SELECT * FROM domains WHERE domain_id = '".$this->_debugValues[':domain_id']."'");
@@ -38,9 +38,9 @@ class Database extends PDOStatement {
 					$t->execute();
 					$row = $t->fetch();
 					if ($q == null) {
-						$q = "Query with group ID '".$this->_debugValues[':group_id']."' => '".$row['group']."'";
+						$q = "Query with group ID '".$this->_debugValues[':group_id']."' => '".$row['name']."'";
 					} else {
-						$q .= " and group ID '".$this->_debugValues[':group_id']."' => '".$row['group']."'";
+						$q .= " and group ID '".$this->_debugValues[':group_id']."' => '".$row['name']."'";
 					}
 				}
 				if (!empty($q)) {

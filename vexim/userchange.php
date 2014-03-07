@@ -82,7 +82,7 @@
       print "></td></tr>\n";
       print "<tr><td>" . _("Forward mail to") . ":</td>";
       print "<td><input type=\"text\" name=\"forward\" value=\"{$row['forward']}\" class=\"textfield\"><br>\n";
-      print _("Muss eine vollst&auml;ndige E-Mail Adresse sein.") . "!</td></tr>\n";
+      print _("Muss eine vollst&auml;ndige E-Mail Adresse sein") . "!</td></tr>\n";
       print "<tr><td>" . _("Store Forwarded Mail Locally") . ":</td><td><input name=\"unseen\" type=\"checkbox\"";
       if ($row['unseen'] == "1") { print " checked "; } print "></td></tr>\n";
     ?>
